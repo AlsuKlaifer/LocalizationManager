@@ -1,0 +1,11 @@
+a Add new key
+m Modify key
+r Remove key
+sh Show all keys
+gen Generate strings enum
+syn Synchronize all localizable files
+rep Replace string literals with structured variables
+al Available languages
+nl Add new language
+rl Remove language
+e Exit

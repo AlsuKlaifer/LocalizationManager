@@ -12,12 +12,8 @@ enum StructGeneration {
     // MARK: Public
 
     static func generateEnum() {
-        guard let directory = Utils.projectDirectory,
-              let file = Utils.localizableFiles.first
-        else { return }
-        
-        let content = Utils.contentOf(file: file)
-        let keys = Utils.extractKeys(from: content)
+        guard let directory = Utils.projectDirectory else { return }
+        let keys = Utils.getAllUniqueKeys()
         
         guard !keys.isEmpty else {
             print("No keys in the file")
@@ -98,13 +94,7 @@ enum StructGeneration {
     private static func createStringExtensionsFile() {
         guard let directory = Utils.projectDirectory else { return }
 
-        let extensionsContent = """
-        extension String {
-            func localized() -> String {
-                NSLocalizedString(self, comment: "")
-            }
-        }
-        """
+        guard let extensionsContent = Converter.readJSONFile(at: "stringExtension.json") else { return }
 
         let outputFilePath = directory + "/String+Extensions.swift"
 
@@ -119,7 +109,6 @@ enum StructGeneration {
             if existingContent.contains("func localized() -> String {") { return }
         }
 
-        // Если функция не найдена или файл не существует, создаем файл и записываем содержимое
         do {
             try extensionsContent.write(toFile: outputFilePath, atomically: true, encoding: .utf8)
         } catch {

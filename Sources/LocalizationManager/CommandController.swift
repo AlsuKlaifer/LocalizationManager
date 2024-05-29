@@ -1,5 +1,5 @@
 //
-//  LocalizationManager.swift
+//  CommandController.swift
 //
 //
 //  Created by Alsu Faizova on 12.05.2024.
@@ -8,66 +8,63 @@
 import Foundation
 
 @main
-public struct LocalizationManager {
+public struct CommandController {
 
     // MARK: Public
 
     public static func main() {
-        guard let dir = Utils.projectDirectory else {
+        guard Utils.projectDirectory != nil else {
             print("Project can't be found!".inRed)
             print("Please enter project directory as argument!".inYellow)
             return
         }
-
+        print(FileService.getAllProjectFiles())
         if Utils.localizableFiles.isEmpty {
             print("Project doesn't contain localizable files".inRed)
-            addLanguages(in: dir)
+            LanguageManager.addLanguages()
         } else {
-            getLanguages(in: dir)
+            LanguageManager.getLanguages()
         }
 
         printTable(info)
         askForUserInput()
     }
 
+    static func currentFilePath(file: String = #file) -> String {
+        return file
+    }
+
     // MARK: Private
 
-    private static let info = """
-    a Add new key
-    m Modify key
-    r Remove key
-    sh Show all keys
-    gen Generate strings enum
-    syn Synchronize all localizable files
-    el Existing languages
-    al Add new language
-    rl Remove language
-    e Exit
-    """
+    private static var info: String {
+        guard let text = Converter.readJSONFile(at: "commands.json") else { return "" }
+        return text
+    }
     
     private static func askForUserInput() {
-        guard let dir = Utils.projectDirectory else { return }
         while true {
             let operation = readLine()
             switch operation?.lowercased() {
             case "a":
-                LocaleManager.tryAddingKey()
+                LocalizationController.tryAddingKey()
             case "m":
-                LocaleManager.tryModifyingKey()
+                LocalizationController.tryModifyingKey()
             case "r":
-                LocaleManager.tryRemovingKey()
+                LocalizationController.tryRemovingKey()
             case "sh":
-                LocaleManager.printKeys()
+                LocalizationController.printKeys()
             case "gen":
                 StructGeneration.generateEnum()
             case "syn":
                 Synchronization.synchronizeAllLocalizableFiles()
+            case "rep":
+                CodeUpdater.replaceStringsWithStructuredVariables()
             case "al":
-                addLanguages(in: dir)
+                LanguageManager.addLanguages()
             case "el":
-                getLanguages(in: dir)
+                LanguageManager.getLanguages()
             case "rl":
-                // remove language
+                LanguageManager.deleteLanguage()
                 continue
             case "?":
                 printTable(info)
@@ -76,26 +73,6 @@ public struct LocalizationManager {
             default:
                 print("Enter ? to get information about commands".inYellow)
             }
-        }
-    }
-
-    private static func addLanguages(in directory: String) {
-        print("Please enter the languages (comma-separated) to create localizable files:".inYellow)
-        if let input = readLine() {
-            let languages = input.split(separator: ",").map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-            for language in languages {
-                Utils.createLocalizableFile(for: language, in: directory)
-            }
-        } else {
-            print("No input received. Exiting.".inRed)
-        }
-    }
-
-    private static func getLanguages(in directory: String) {
-        print("Existing languages:".inYellow)
-        for file in Utils.localizableFiles {
-            let language = file.components(separatedBy: ".").first ?? ""
-            print(language)
         }
     }
 

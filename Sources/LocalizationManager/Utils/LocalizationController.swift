@@ -1,13 +1,13 @@
 //
-//  LocaleManager.swift
-//  
+//  LocalizationController.swift
+//
 //
 //  Created by Alsu Faizova on 12.05.2024.
 //
 
 import Foundation
 
-enum LocaleManager {
+enum LocalizationController {
     static func tryAddingKey() {
         print("What key do you want to add?".inYellow)
         
@@ -134,5 +134,4 @@ enum LocaleManager {
             print(key.inYellow)
         }
     }
-
 }
