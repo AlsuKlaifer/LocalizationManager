@@ -11,7 +11,7 @@ enum StructGeneration {
 
     // MARK: Public
 
-    static func generateEnum() {
+    static func generateStruct() {
         guard let directory = Utils.projectDirectory else { return }
         let keys = Utils.getAllUniqueKeys()
         
@@ -21,9 +21,9 @@ enum StructGeneration {
         }
         
         let structure = buildStructure(from: keys)
-        var enumContent = "enum Strings {\n"
-        enumContent += generateEnumContent(from: structure)
-        enumContent += "}\n"
+        var structContent = "struct Strings {\n"
+        structContent += generateStructContent(from: structure)
+        structContent += "}\n"
 
         let outputFilePath = directory + "/Strings.swift"
 
@@ -35,8 +35,8 @@ enum StructGeneration {
         
         // Записываем содержимое в файл
         do {
-            try enumContent.write(toFile: outputFilePath, atomically: true, encoding: .utf8)
-            print("Generated strings enum at: \(outputFilePath)".inGreen)
+            try structContent.write(toFile: outputFilePath, atomically: true, encoding: .utf8)
+            print("Generated Strings struct at: \(outputFilePath)".inGreen)
         } catch {
             print("Failed to write to file: \(error)".inRed)
         }
@@ -74,21 +74,21 @@ enum StructGeneration {
         }
     }
 
-    private static func generateEnumContent(from structure: [String: Any], indent: String = "    ") -> String {
+    private static func generateStructContent(from structure: [String: Any], indent: String = "    ") -> String {
         var singletonProperties = ""
-        var nestedEnums = ""
+        var nestedStruct = ""
 
         for (key, value) in structure {
             if let nested = value as? [String: Any] {
-                nestedEnums += "\(indent)enum \(key.capitalized) {\n"
-                nestedEnums += generateEnumContent(from: nested, indent: indent + "    ")
-                nestedEnums += "\(indent)}\n"
+                nestedStruct += "\(indent)struct \(key.capitalized) {\n"
+                nestedStruct += generateStructContent(from: nested, indent: indent + "    ")
+                nestedStruct += "\(indent)}\n"
             } else if let property = value as? String {
                 singletonProperties += "\(indent)\(property)\n"
             }
         }
 
-        return singletonProperties + nestedEnums
+        return singletonProperties + nestedStruct
     }
 
     private static func createStringExtensionsFile() {

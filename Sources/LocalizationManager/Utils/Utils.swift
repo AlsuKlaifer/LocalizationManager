@@ -69,6 +69,9 @@ enum Utils {
                 fileManager.createFile(atPath: filePath, contents: nil, attributes: nil)
                 print("Created \(language).lproj/Localizable.strings".inGreen)
 
+                //Добавляем в файлы проекта
+                XcodeProjectManager.addFileToProject(filePath: filePath)
+
                 // Синхронизируем файл с остальными
                 let _ = Synchronization.synchronizeFile(at: filePath)
             } else {

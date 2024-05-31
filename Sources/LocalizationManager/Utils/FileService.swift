@@ -83,6 +83,19 @@ enum FileService {
         
         return localizationFiles
     }
+
+    static func setReadWritePermissions(for directory: String) {
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: "/bin/chmod")
+        process.arguments = ["-R", "u+rw,g+rw,o+rw", directory]
+
+        do {
+            try process.run()
+            process.waitUntilExit()
+        } catch {
+            return
+        }
+    }
     
     // MARK: Private
 

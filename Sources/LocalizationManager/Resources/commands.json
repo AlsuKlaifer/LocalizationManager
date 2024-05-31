@@ -2,7 +2,7 @@ a Add new key
 m Modify key
 r Remove key
 sh Show all keys
-gen Generate strings enum
+gen Generate strings struct
 syn Synchronize all localizable files
 rep Replace string literals with structured variables
 al Available languages

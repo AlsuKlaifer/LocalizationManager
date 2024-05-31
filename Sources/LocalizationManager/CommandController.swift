@@ -18,7 +18,7 @@ public struct CommandController {
             print("Please enter project directory as argument!".inYellow)
             return
         }
-        print(FileService.getAllProjectFiles())
+
         if Utils.localizableFiles.isEmpty {
             print("Project doesn't contain localizable files".inRed)
             LanguageManager.addLanguages()
@@ -54,7 +54,7 @@ public struct CommandController {
             case "sh":
                 LocalizationController.printKeys()
             case "gen":
-                StructGeneration.generateEnum()
+                StructGeneration.generateStruct()
             case "syn":
                 Synchronization.synchronizeAllLocalizableFiles()
             case "rep":

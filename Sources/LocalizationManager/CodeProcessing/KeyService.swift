@@ -23,7 +23,7 @@ struct KeyService {
     // Функция преобразует ключ "main_top_label" в переменную "Strings.Main.Top.label"
     static func getStructuredVariable(for key: String) -> String {
         let components = key.split(separator: "_")
-        
+
         let camelCaseComponents = components.map { component in
             return component.prefix(1).uppercased() + component.dropFirst()
         }
